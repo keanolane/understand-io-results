@@ -44,7 +44,7 @@ function loadMoreResults() {
     loadedResults += 50;
 
     if (loadedResults < nbResults) {
-        registerTimeout(nbResults);
+        registerTimeout();
     } else {
         console.log('Finished');
     }
