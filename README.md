@@ -44,3 +44,6 @@ loading results from 101 to 150 (out of 200)
 loading results from 151 to 200 (out of 200)
 Finished
 ```
+
+
+> ***NOTE: If you want to load a all results, simply input a massive number in and it will stop automatically (e.g. fetchResults(1000000);)*** 
