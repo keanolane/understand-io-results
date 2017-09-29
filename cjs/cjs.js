@@ -1,10 +1,14 @@
 var loadedResultsSelector = '.result-row';
 var buttonSelector = '.table-footer.load-more-results-wrap a.load-more-results:not(.hidden)';
 var nbResults = 0;
+var autoScrollInterval;
+var isFetching;
 
 function fetchResults(nbTotalResultsToFetch) {
     nbResults = $(loadedResultsSelector).length + nbTotalResultsToFetch;
+    isFetching = true;
 
+    registerAutoScroll();
     loadMoreResults();
 }
 
@@ -12,8 +16,25 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function registerAutoScroll()
+{
+    autoScrollInterval = setInterval(scrollToBottom, 250);
+}
+
+function unregisterAutoScroll()
+{
+    console.log('unregisterAutoScroll');
+    clearInterval(autoScrollInterval);
+}
+
 function registerTimeout() {
-    setTimeout(loadMoreResults, 2000);
+    setTimeout(loadMoreResults, 500);
+}
+
+function scrollToBottom() {
+    console.log('autoscrolling');
+
+    window.scrollTo(0,document.body.scrollHeight);
 }
 
 function loadMoreResults() {
@@ -29,7 +50,7 @@ function loadMoreResults() {
 
     var $button = $($buttonResults.get(0));
 
-    if ($button.html() == 'Loading...') {
+    if ($button.hasClass('disabled')) {
         console.log(' -> still loading, retrying in a bit...');
 
         registerTimeout();
@@ -46,6 +67,8 @@ function loadMoreResults() {
     if (loadedResults < nbResults) {
         registerTimeout();
     } else {
+        isFetching = false;
+        setTimeout(unregisterAutoScroll, 2000);
         console.log('Finished');
     }
 }
